@@ -22,7 +22,9 @@ export default function ProfilePicture() {
                     animate={{ rotate: [0, 360] }}
                         transition={{ duration: 30, repeat: Infinity, ease: "linear"}}
                 >
-                    <Image src={"/assets/pfp.png"} alt={"sesso"} width={500} height={500}/>
+                    <a href="https://github.com/Manuel-Montaruli" target="_blank" rel="noopener noreferrer">
+                        <Image src={"/assets/pfp.png"} alt={"sesso"} width={500} height={500}/>
+                    </a>
                 </motion.div>
             </motion.div>
         </motion.div>

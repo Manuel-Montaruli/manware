@@ -4,7 +4,7 @@ import ProfileText from "@/components/Profile/ProfileText";
 
 export default function Profile() {
     return (
-        <div className="flex justify-start align-top gap-10">
+        <div className="flex justify-start align-top gap-12">
             <ProfilePicture />
             <Separator orientation={"vertical"}/>
             <ProfileText />
