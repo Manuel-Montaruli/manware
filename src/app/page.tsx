@@ -20,8 +20,8 @@ export default function Home() {
                 variant="round"
             />
         </div>
-        <div className="relative z-10 pt-40">
-            <h1 className="text-primary font-light text-center text-5xl"><span className="font-bold">Hold tight!</span> New website Coming Soon</h1>
+        <div className="relative z-10 pt-30">
+            <h1 className="text-primary font-light text-center text-5xl mb-45"><span className="font-bold">Hold tight!</span> New website Coming Soon</h1>
             <Profile />
         </div>
       </main>
