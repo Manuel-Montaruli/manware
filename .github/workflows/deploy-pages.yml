@@ -14,11 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - name: Install dependencies
         run: npm ci
 
@@ -31,3 +26,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_EDIT_PAGES_API_TOKEN }}
           command: pages deploy out --project-name=manware
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
