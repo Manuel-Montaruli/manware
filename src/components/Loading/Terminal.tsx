@@ -3,14 +3,8 @@ import Typed from "typed.js";
 
 const colors = {
     green: "text-[#70C24E]",
-    blue: "text-[#41C4D1]",
+    blue: "text-[#6CEEDF]",
 };
-
-interface Portal {
-    key: number;
-    node: HTMLElement;
-    content: React.ReactNode;
-}
 
 export interface SequenceStep {
     typed: string;                                                          //The string being typed
@@ -19,9 +13,9 @@ export interface SequenceStep {
 }
 
 export default function Terminal ({
-     defaultTypeSpeed = 50,
+     defaultTypeSpeed = 35,
      delayBeforeInstant = 100,
-     delayAfterInstant = 100,
+     delayAfterInstant = 600,
      showCursor = true,
  }){
     const staticRef = useRef<HTMLSpanElement>(null);
@@ -47,6 +41,7 @@ export default function Terminal ({
                 strings: [step.typed],
                 typeSpeed: step.typeSpeed ?? defaultTypeSpeed,
                 showCursor,
+                cursorChar: "█",
                 onComplete: () => {
                     // Move the finished text into the static span, then explicitly
                     // clear the typed span, destory does it asynchronously
@@ -86,25 +81,77 @@ export default function Terminal ({
     }, [steps]);
 
     return (
-        <div className="bg-black text-white w-screen h-screen font-jetbrains text-sm">
+        <div className="bg-black text-white w-screen h-screen font-jetbrains text-sm whitespace-pre pl-2 pt-1">
             <span ref={staticRef}>
-                {staticContent}
+                {commandPrefix("root@samsungfridge", "~")}{staticContent}
             </span>
             <span ref={typedRef} />
         </div>
     )
 }
 
-function commandPrefix(folderName: string) {
+function commandPrefix(user: string, folderName: string) {
     return (
         <span className={"font-bold"}>
-            <span className={colors.green}>user@manware</span>{" "}
-            <span className={colors.blue}>{folderName}</span>
+            {user && (<><span className={colors.green}>{user}</span>{" "}</>)}
+            <span className={colors.blue}>{folderName}{" "}</span>
         </span>
     );
 }
 
+function lsOutput() {
+    const files = [
+        ".git",
+        "Assets",
+        "Contacts",
+        "Homepage",
+        "Projects",
+        "README.md"
+    ];
+
+    const columns = 3;
+    const columnWidth = 14;
+    return (<>
+        {files.map((file, i) => (
+            <span key={file} className={colors.blue + " font-bold"}>
+              {file.padEnd(columnWidth, " ")}
+                {(i + 1) % columns === 0 && "\n"}
+            </span>
+        ))}
+    </>)
+}
+
 const getSteps: () => SequenceStep[] = () => {
-    const steps: SequenceStep[] = [{typed: "ciao", instant: commandPrefix("~"), typeSpeed: 100},{typed: "COSA", instant: commandPrefix("~/gaygaygay"), typeSpeed: 300}]
-    return steps;
+    const steps: SequenceStep[] = [
+        {
+            typed: "motd",
+            instant: <>Butter is missing!<br/>{commandPrefix("root@samsungfridge", "~")}</>
+        },
+        {
+            typed: "ssh -i ~/.ssh/manware_ed25519 user@manware",
+            instant: <>{commandPrefix("user@manware", "~")}</>
+        },
+        {
+            typed: "ls",
+            instant: <>{lsOutput()}{commandPrefix("user@manware", "~")}</>
+        },
+        {
+            typed: "cd Homepage",
+            instant: <>{commandPrefix("user@manware", "~/Homepage")}</>
+        },
+        {
+            typed: "xdg-open index.html",
+            instant: <>Opening browser...<br/>{commandPrefix("user@manware", "~/Homepage")}</>
+        },
+    ]
+
+    return steps.map(step => ({
+        ...step,
+        instant: (
+            <>
+                <br />
+                {step.instant}
+            </>
+        ),
+    }));
 }
