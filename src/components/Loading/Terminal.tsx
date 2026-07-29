@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import Typed from "typed.js";
+import LoadingChars from "@/components/Loading/LoadingChars";
 
 const colors = {
     green: "text-[#70C24E]",
@@ -141,7 +142,7 @@ const getSteps: () => SequenceStep[] = () => {
         },
         {
             typed: "xdg-open index.html",
-            instant: <>Opening browser...<br/>{commandPrefix("user@manware", "~/Homepage")}</>
+            instant: <>Opening browser <LoadingChars/></>
         },
     ]
 
