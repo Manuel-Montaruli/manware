@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import Typed from "typed.js";
 import LoadingChars from "@/components/Loading/LoadingChars";
 
@@ -13,12 +13,22 @@ export interface SequenceStep {
     typeSpeed?: number;                                                     //The type speed of the typed string
 }
 
-export default function Terminal ({
-     defaultTypeSpeed = 35,
-     delayBeforeInstant = 100,
-     delayAfterInstant = 600,
-     showCursor = true,
- }){
+interface TerminalProps {
+    defaultTypeSpeed?: number
+    delayBeforeInstant?: number
+    delayAfterInstant?: number
+    showCursor?: boolean
+    setShow: Dispatch<SetStateAction<boolean>>
+}
+
+export default function Terminal({
+        defaultTypeSpeed = 25,
+        delayBeforeInstant = 100,
+        delayAfterInstant = 250,
+        showCursor = true,
+        setShow,
+    }: TerminalProps)
+ {
     const staticRef = useRef<HTMLSpanElement>(null);
     const typedRef = useRef<HTMLSpanElement>(null);
     const typedInstance = useRef<Typed | null>(null);
@@ -35,7 +45,10 @@ export default function Terminal ({
         };
 
         const runStep = (index: number) => {
-            if (index >= steps.length || !typedRef.current) return;
+            if (index >= steps.length || !typedRef.current) {
+                setShow(false)  //Triggers fading
+                return;
+            }
             const step: SequenceStep = steps[index];
 
             typedInstance.current = new Typed(typedRef.current, {
